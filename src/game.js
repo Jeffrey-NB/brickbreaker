@@ -1,6 +1,9 @@
 import Paddle from "/src/paddle";
 import InputHandler from "/src/input";
 import Ball from "/src/ball";
+import Brick from "/src/brick";
+
+import {buildLevel,level1} from "/src/levels";
 
 export default class Game{
   constructor(gameWidth, gameHeight){
@@ -14,7 +17,9 @@ export default class Game{
     this.paddle = new Paddle(this);
     this.ball = new Ball(this);
 
-    this.gameObjects = [this.paddle, this.ball];
+    let bricks = buildLevel(this, level1)
+
+    this.gameObjects = [this.paddle, this.ball, ...bricks];
 
     new InputHandler(this.paddle);
   }
@@ -22,6 +27,8 @@ export default class Game{
   update(deltaTime){
 
     this.gameObjects.forEach((object) => object.update(deltaTime));
+
+    this.gameObjects = this.gameObjects.filter(object => !object.markedForDeletion);
 
   }//end update
 
